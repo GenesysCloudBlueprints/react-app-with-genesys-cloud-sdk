@@ -1,0 +1,46 @@
+@import "~bootstrap/scss/bootstrap";
+
+body {
+  height: 100%;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	font-family: 'Roboto', sans-serif;
+	color: #444a52;
+	font-size: 14px;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+  background-color: rgb(214, 224, 240);
+}
+
+thead {
+  display: table-header-group
+}
+
+table {
+  text-align: center;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 2em;
+  border-bottom: 1px solid #444a52;
+}
+
+th {
+  padding: 1em;
+  border-bottom: 1px solid #444a52;
+}
+
+.content-wrapper {
+  width: 50vw;
+  height: fit-content;
+  background-color: rgb(255, 248, 248);
+  left: 25%;
+  right: 25%;
+  top: 0;
+  position: relative;
+}
+
+
+
