@@ -43,7 +43,7 @@ export function Queues(props: IProps) {
 
     useEffect(() => {
         getQueueInfo();
-        refreshQueueObservations(); // eslint-disable-next-line react-hooks/exhaustive-deps
+        refreshQueueObservations();
     }, []);
 
     const getQueueInfo = async() => {

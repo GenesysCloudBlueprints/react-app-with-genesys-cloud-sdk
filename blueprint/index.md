@@ -15,7 +15,7 @@ summary: |
 * [Requirements](#requirements "Goes to the Requirements section")
 * [Running Locally](#running-locally "Goes to the Running Locally section")
 * [Sample App Overview](#sample-app-overview "Overview of the sample app's features")
-* [Configuring the Angular Project to use Genesys Cloud SDK](#configuring-the-angular-project-to-use-genesys-cloud-sdk "How to integrate the Genesys Cloud SDK")
+* [Configuring the React Project to use Genesys Cloud SDK](#configuring-the-react-project-to-use-genesys-cloud-sdk "How to integrate the Genesys Cloud SDK")
 * [Additional resources](#additional-resources "Goes to the Additional resources section")
 
 
@@ -55,10 +55,10 @@ A recommended Genesys Cloud role for the solutions engineer is Master Admin. For
 ## Running Locally
 
 ### Download the repository containing the project files
-Go to the [repository](https://github.com/GenesysCloudBlueprints/angular-app-with-genesys-cloud-sdk) and clone it to your machine.
+Go to the [repository](https://github.com/GenesysCloudBlueprints/react-app-with-genesys-cloud-sdk) and clone it to your machine.
 
 ```bash
-git clone https://github.com/GenesysCloudBlueprints/angular-app-with-genesys-cloud-sdk.git
+git clone https://github.com/GenesysCloudBlueprints/react-app-with-genesys-cloud-sdk.git
 ```
 
 ### Create an Implicit Grant OAuth
@@ -130,7 +130,9 @@ If you are creating a new app from scratch, run the following command in a termi
 ```bash
 npx create-react-app name-of-your-app --template typescript
 ```
-If you're configuring an existing React app, it is suggested that you use a version greater than v16.0, since the sample app uses React hooks introduced in React v16.0
+
+If you're configuring an existing React app, it is suggested that you use a version greater than v16.0, since the sample app uses React hooks introduced in React v16.0.
+See the tsconfig.json file in the root directory of this project for a typescript configuration example.
 
 ### Installing NPM Packages
 

@@ -3,7 +3,7 @@ import {
   Route,
   Switch 
 } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Home } from './components/home/Home.component';
 import { NavBar } from './components/navbar/NavBar.component';
 import { Queues } from './components/queues/Queues.component';

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Home.component.scss';
 import { 
   getUserRoutingStatus, 
@@ -18,7 +18,7 @@ interface IRoutingStatus {
 }
 
 export function Home(props: IProps) {
-  let [routingStatus, setRoutingStatus] = useState<string>('');
+  const [routingStatus, setRoutingStatus] = useState<string>('');
 
   const { 
     avatarUrl, 
@@ -46,14 +46,14 @@ export function Home(props: IProps) {
           break;
       default: 
           presenceColor = 'black';
-  };
+  }
 
   const presenceStyle = {
       color: presenceColor
   };
 
   useEffect(() => {
-    userId && getPlatformClientData(); // eslint-disable-next-line react-hooks/exhaustive-deps
+    userId && getPlatformClientData();
   }, []);
 
   const getPlatformClientData = async() => {

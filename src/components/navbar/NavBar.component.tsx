@@ -1,4 +1,4 @@
-import { useHistory } from 'react-router-dom';
+import React, { useHistory } from 'react-router-dom';
 import './NavBar.component.scss';
 import logo from '../../assets/genesys-logo.png'
 

@@ -34,10 +34,9 @@ export function UserSearch() {
     const [users, setUsers] = useState<any[]>([])
 
     async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        let searchTerm: string = e.target.value;
-        setSearchString(searchTerm);
+        setSearchString(e.target.value);
         let tempUsers: any[];
-        await getUserByEmail(searchTerm.trim())
+        await getUserByEmail(e.target.value)
             .then((userResponse: IUserResponse) => {
                 const userResults = (userResponse.results || []).map((result: any) => {
                     const userResult: IUser = {
@@ -93,7 +92,7 @@ export function UserSearch() {
                 break;
             default: 
                 presenceColor = 'black';
-        };
+        }
 
         const presenceStyle = {
             color: presenceColor
