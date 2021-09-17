@@ -1,5 +1,21 @@
 import { clientConfig } from '../clientConfig';
 const platformClient = require('purecloud-platform-client-v2/dist/node/purecloud-platform-client-v2.js');
+
+interface IPresenceData {
+    id: string,
+    systemPresence: string
+}
+
+interface IPresenceDefinitionsResponse {
+    entities: IPresenceData[]
+}
+
+interface IQueue {
+    id: string,
+    activeUsers: number,
+    onQueueUsers: number
+}
+
 const searchApi = new platformClient.SearchApi();
 const usersApi = new platformClient.UsersApi();
 const analyticsApi = new platformClient.AnalyticsApi();
@@ -17,7 +33,7 @@ export function authenticate() {
         .then((data: any) => {
             return presenceApi.getPresencedefinitions();
         })
-        .then((data: any) => {
+        .then((data: IPresenceDefinitionsResponse) => {
             if (!data.entities) return;
             console.log('PRESENCE DATA', data.entities);
             // Get the ID of the Offline Presence
@@ -71,8 +87,8 @@ export async function logoutUsersFromQueue(queueId: string) {
         })
 }
 
-export function getQueueObservations(queues: any) {
-    const predicates = queues.map((queue: any) => {
+export function getQueueObservations(queues: IQueue[]) {
+    const predicates = queues.map((queue: IQueue) => {
         return {
             type: 'dimension',
             dimension: 'queueId',

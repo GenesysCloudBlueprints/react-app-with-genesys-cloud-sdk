@@ -39,7 +39,7 @@ interface IProps {
 }
 
 export function Queues(props: IProps) {
-    const [queues, setQueues] = useState<any[]>([]);
+    const [queues, setQueues] = useState<IQueue[]>([]);
 
     useEffect(() => {
         getQueueInfo();
@@ -94,10 +94,12 @@ export function Queues(props: IProps) {
                   .find((queue: any) => queue.id === result.group?.queueId);
                 const activeUsersMetric = (result?.data || [])
                   .find((datum: any) => datum.metric === 'oActiveUsers');
-                queue.activeUsers = activeUsersMetric?.stats?.count || 0;
-                const onQueueUsersMetric = (result?.data || [])
-                  .find((datum: any) => datum.metric === 'oOnQueueUsers')
-                queue.onQueueUsers = onQueueUsersMetric?.stats?.count || 0;
+                if (queue) {
+                  queue.activeUsers = activeUsersMetric?.stats?.count || 0;
+                  const onQueueUsersMetric = (result?.data || [])
+                    .find((datum: any) => datum.metric === 'oOnQueueUsers')
+                  queue.onQueueUsers = onQueueUsersMetric?.stats?.count || 0;
+                }
               });
               tempQueues && setQueues(tempQueues);
             }

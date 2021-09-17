@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { getUserByEmail, getUserDetails } from '../../utils/genesysCloudUtils';
 import defaultAvatar from '../../assets/default.svg';
 import './UserSearch.component.scss'
+const debounce = require('lodash.debounce');
 
 interface IUser {
     id: string,
@@ -33,7 +34,14 @@ export function UserSearch() {
     const [searchString, setSearchString] = useState<string>('');
     const [users, setUsers] = useState<any[]>([])
 
-    async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setSearchString(e.target.value);
+        debouncedUpdate(e);
+    }
+
+    const debouncedUpdate = useRef(debounce((e: any) => updateUserCards(e), 200)).current;
+
+    async function updateUserCards(e: React.ChangeEvent<HTMLInputElement>) {
         setSearchString(e.target.value);
         let tempUsers: any[];
         await getUserByEmail(e.target.value)
