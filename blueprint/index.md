@@ -1,6 +1,6 @@
----
+ ---
 title: Develop a React App with Typescript that uses the Genesys Cloud Platform SDK
-author: Jacob Shaw
+author: jacob.shaw
 indextype: blueprint
 icon: blueprint
 image: images/5.png
@@ -9,7 +9,8 @@ summary: |
   This Genesys Cloud Developer Blueprint demonstrates how to integrate the Genesys Cloud Javascript Platform SDK into your React app.  This example uses Typescript, although the implementation will be similar if you're using plain javascript.  The sample app provides examples of use cases such as creating a profile page for a user and admin operations like signing all the users out of a queue.  The blueprint will describe the steps needed to integrate the Genesys Cloud SDK into your React app.
 ---
 
-<!-- no toc -->
+## Contents
+
 * [Sample Application Features](#sample-application-features "Goes to the Sample Application Features section")
 * [Solution Components](#solution-components "Goes to the Solutions Components section")
 * [Requirements](#requirements "Goes to the Requirements section")
@@ -34,7 +35,7 @@ summary: |
 
 ### Software Development Kit (SDK)
 
-- **Genesys Cloud Javascript Platform SDK** - Providing the steps for integrating this SDK and using it in meaningful ways is the focus of the sample app.
+- **Platform API Javascript Client** - Providing the steps for integrating this SDK and using it in meaningful ways is the focus of the sample app.  Find the [Platform API Javascript Client](https://github.com/MyPureCloud/platform-client-sdk-javascript) here: https://github.com/MyPureCloud/platform-client-sdk-javascript
 
 ## Requirements
 
@@ -55,7 +56,7 @@ A recommended Genesys Cloud role for the solutions engineer is Master Admin. For
 ## Running Locally
 
 ### Download the repository containing the project files
-Go to the [repository](https://github.com/GenesysCloudBlueprints/react-app-with-genesys-cloud-sdk) and clone it to your machine.
+Go to the [React App With Genesys Cloud SDK](https://github.com/GenesysCloudBlueprints/react-app-with-genesys-cloud-sdk) repository and clone it to your machine.
 
 ```bash
 git clone https://github.com/GenesysCloudBlueprints/react-app-with-genesys-cloud-sdk.git
@@ -64,7 +65,7 @@ git clone https://github.com/GenesysCloudBlueprints/react-app-with-genesys-cloud
 ### Create an Implicit Grant OAuth
 
 1. Login to your Genesys Cloud organization and create a new OAuth Credential (Implicit Grant). [Create an OAuth Client](https://help.mypurecloud.com/articles/create-an-oauth-client/)
-2. Add **https://localhost/** to the **Authorized redirect URIs**. Note: If you've changed the **redirecUri** value in the config file, then you need to add that new URI instead.
+2. Add **http://localhost/** to the **Authorized redirect URIs**. Note: If you've changed the **redirecUri** value in the config file, then you need to add that new URI instead.
 3. Add the following in the Scopes section:
     * analytics
     * authorization
@@ -125,9 +126,10 @@ Now we'll look at the steps needed to integrate the Genesys Cloud SDK into your 
 
 ### Creating a React Project
 
-If you are creating a new app from scratch, run the following command in a terminal in the directory of your choice:
+If you are creating a new app from scratch, run the following commands in a terminal in the directory of your choice:
 
 ```bash
+npm install -g npx
 npx create-react-app name-of-your-app --template typescript
 ```
 
@@ -167,3 +169,5 @@ const presenceApi = new platformClient.PresenceApi();
 
 * [Genesys Cloud Platform SDK - Javascript](https://developer.genesys.cloud/api/rest/client-libraries/javascript/)
 * [Github Repository](https://github.com/GenesysCloudBlueprints/react-app-with-genesys-cloud-sdk)
+* [Create a New React App](https://reactjs.org/docs/create-a-new-react-app.html)
+
