@@ -1,15 +1,6 @@
 import { clientConfig } from '../clientConfig';
 const platformClient = require('purecloud-platform-client-v2/dist/node/purecloud-platform-client-v2.js');
 
-interface IPresenceData {
-    id: string,
-    systemPresence: string
-}
-
-interface IPresenceDefinitionsResponse {
-    entities: IPresenceData[]
-}
-
 interface IQueue {
     id: string,
     activeUsers: number,
@@ -31,6 +22,8 @@ const offlinePresenceId = 'ccf3c10a-aa2c-4845-8e8d-f59fa48c58e5';
 
 const client = platformClient.ApiClient.instance;
 const { clientId, redirectUri } = clientConfig;
+
+const cache: any = {};
 
 export function authenticate() {
     return client.loginImplicitGrant(clientId, redirectUri, { state: 'state' })
@@ -55,8 +48,19 @@ export function getUserByEmail(email: string) {
     return searchApi.postUsersSearch(body);
 }
 
-export function getQueues(userId: string) {
-    return usersApi.getUserQueues(userId);
+export async function getQueues(userId: string, skipCache: boolean = false) {
+    if (skipCache) {
+        return usersApi.getUserQueues(userId);
+    } else if (cache['queues']){
+        return cache['queues'];
+    } else {
+        try {
+            cache['queues'] = await usersApi.getUserQueues(userId);
+            return cache['queues'];
+        } catch (err) {
+            console.error(err)
+        }
+    }
 }
 
 export function getUserRoutingStatus(userId: string) {
@@ -101,14 +105,40 @@ export function getQueueObservations(queues: IQueue[]) {
     return analyticsApi.postAnalyticsQueuesObservationsQuery(body);
 }
 
-export function getUserMe() {
-  return usersApi.getUsersMe({ 
-      expand: ['routingStatus', 'presence'],
-    });
+export async function getUserMe(skipCache: boolean = false) {
+    if (skipCache) {
+        return usersApi.getUsersMe({ 
+            expand: ['routingStatus', 'presence'],
+        });
+    } else if (cache['userMe']){
+        return cache['userMe'];
+    } else {
+        try {
+            cache['userMe'] = await usersApi.getUsersMe({ 
+                expand: ['routingStatus', 'presence'],
+            });
+            return cache['userMe'];
+        } catch (err) {
+            console.error(err)
+        }
+    }
 }
 
-export function getUserDetails(id: string) {
-    return usersApi.getUser(id, { 
-        expand: ['routingStatus', 'presence'],
-      });
+export async function getUserDetails(id: string, skipCache: boolean = false) {
+    if (skipCache) {
+        return usersApi.getUser(id, { 
+            expand: ['routingStatus', 'presence'],
+        });
+    } else if (cache['userDetails']){
+        return cache['userDetails'];
+    } else {
+        try {
+            cache['userDetails'] = await usersApi.getUser(id, { 
+                expand: ['routingStatus', 'presence'],
+            });
+            return cache['userDetails'];
+        } catch (err) {
+            console.error(err)
+        }
+    }
   }

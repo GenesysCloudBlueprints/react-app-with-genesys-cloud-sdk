@@ -57,7 +57,7 @@ export function UserSearch() {
                     return userResult;
                 });
                 tempUsers = userResults || [];
-                return Promise.all(userResults.map((userResult: any) => getUserDetails(userResult.id)));
+                return Promise.all(userResults.map((userResult: any) => getUserDetails(userResult.id, true)));
             })
             .then((userDetailsResponse: IUserDetails[]) => {
                 console.log('USER DETAILS RESPONSE', userDetailsResponse);
