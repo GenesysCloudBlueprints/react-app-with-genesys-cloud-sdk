@@ -23,7 +23,11 @@ const tokensApi = new platformClient.TokensApi();
 const routingApi = new platformClient.RoutingApi();
 const presenceApi = new platformClient.PresenceApi();
 
-let offlinePresenceId = '';
+/* 
+ * This presence ID is hardcoded because System presence IDs are hardcoded into Genesys Cloud, can never change, and are not unique to orgs or regions
+ * In constrast, Org presences are not hardcoded.
+*/
+const offlinePresenceId = 'ccf3c10a-aa2c-4845-8e8d-f59fa48c58e5';
 
 const client = platformClient.ApiClient.instance;
 const { clientId, redirectUri } = clientConfig;
@@ -31,15 +35,6 @@ const { clientId, redirectUri } = clientConfig;
 export function authenticate() {
     return client.loginImplicitGrant(clientId, redirectUri, { state: 'state' })
         .then((data: any) => {
-            return presenceApi.getPresencedefinitions();
-        })
-        .then((data: IPresenceDefinitionsResponse) => {
-            if (!data.entities) return;
-            console.log('PRESENCE DATA', data.entities);
-            // Get the ID of the Offline Presence
-            offlinePresenceId = data.entities
-               .find((p: any) => p.systemPresence === 'Offline')!.id!;
-            // Get the list for the other presences
             return data;
         })
         .catch((err: any) => {
