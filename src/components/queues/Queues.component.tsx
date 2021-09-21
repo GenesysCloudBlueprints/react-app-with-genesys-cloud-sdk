@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { 
     getQueues, 
     getQueueObservations, 
     logoutUsersFromQueue 
 } from '../../utils/genesysCloudUtils';
+import notificationsController from '../../utils/notificationsController';
 import './Queues.component.scss'
 
 interface IQueueResponse {
@@ -41,76 +42,80 @@ interface IProps {
 export function Queues(props: IProps) {
     const [queues, setQueues] = useState<IQueue[]>([]);
 
+    const queueRef: React.MutableRefObject<any> = useRef({});
+    queueRef.current = queues;
+
     useEffect(() => {
         getQueueInfo();
         refreshQueueObservations();
     }, []);
 
-    const getQueueInfo = async() => {
-        const { userId } = props;
-        let tempQueues: any;
-        await getQueues(userId)
-            .then((queueResponse: IQueueResponse) => {
-              console.log('QUEUES', queueResponse);
-              tempQueues = queueResponse?.entities;
-              return getQueueObservations(tempQueues)
-            })
-            .then((queueObservationResponse: IQueueObservationResponse) => {
-              console.log('OBSERVATION METRICS', queueObservationResponse);
-              const { results = [] } = queueObservationResponse;
-              results.forEach((result: any) => {
-                const queue = (tempQueues || [])
-                  .find((queue: any) => queue.id === result.group?.queueId );
-                const activeUsersMetric = result.data
-                  .find((datum: any) => datum.metric === 'oActiveUsers');
-                queue.activeUsers = activeUsersMetric?.stats?.count || 0;
-                const onQueueUsersMetric = result.data
-                  .find((datum: any) => datum.metric === 'oOnQueueUsers')
-                queue.onQueueUsers = onQueueUsersMetric?.stats?.count || 0;
-              })
-              tempQueues && setQueues(tempQueues);
-            })
-            .catch((err: any) => {
-              console.error(err);
-            });
+    async function getQueueInfo() {
+      const { userId } = props;
+      let tempQueues: any;
+      await getQueues(userId)
+        .then((queueResponse: IQueueResponse) => {
+          console.log('QUEUES', queueResponse);
+          tempQueues = queueResponse?.entities;
+          return getQueueObservations(tempQueues)
+        })
+        .then((queueObservationResponse: IQueueObservationResponse) => {
+          console.log('OBSERVATION METRICS', queueObservationResponse);
+          const { results = [] } = queueObservationResponse;
+          results.forEach((result: any) => {
+            const queue = (tempQueues || [])
+              .find((queue: any) => queue.id === result.group?.queueId );
+            const activeUsersMetric = result.data
+              .find((datum: any) => datum.metric === 'oActiveUsers');
+            queue.activeUsers = activeUsersMetric?.stats?.count || 0;
+            const onQueueUsersMetric = result.data
+              .find((datum: any) => datum.metric === 'oOnQueueUsers')
+            queue.onQueueUsers = onQueueUsersMetric?.stats?.count || 0;
+          })
+          tempQueues && setQueues(tempQueues);
+        })
+        .catch((err: any) => {
+          console.error(err);
+        });
     }
 
-    const refreshQueueObservations = () => {
-        setInterval(async() => {
-          queueObservationWrapper();
-        }, 30000);
-      };
-    
-    
-      const queueObservationWrapper = async() => {
-        const tempQueues = queues;
-        await getQueueObservations(queues)
-          .then((queueObservationResponse: any) => {
-            console.log('OBSERVATION METRICS', queueObservationResponse);
-            const { results = [] } = queueObservationResponse;
-            if (results.length > 0) {
-              results.forEach((result: any) => {
-                const queue = (tempQueues || [])
-                  .find((queue: any) => queue.id === result.group?.queueId);
-                const activeUsersMetric = (result?.data || [])
-                  .find((datum: any) => datum.metric === 'oActiveUsers');
-                if (queue) {
-                  queue.activeUsers = activeUsersMetric?.stats?.count || 0;
-                  const onQueueUsersMetric = (result?.data || [])
-                    .find((datum: any) => datum.metric === 'oOnQueueUsers')
-                  queue.onQueueUsers = onQueueUsersMetric?.stats?.count || 0;
-                }
-              });
-              tempQueues && setQueues(tempQueues);
-            }
-          })
-          .catch((err: any) => {
-            console.error(err);
-          })
-      }
+    function refreshQueueObservations() {
+      setInterval(async() => {
+        queueObservationWrapper();
+      }, 30000);
+    }
+  
+  
+    async function queueObservationWrapper() {
+      const tempQueues = queueRef.current;
+      console.log('QUEUEUEUEUES', tempQueues);
+      await getQueueObservations(queueRef.current)
+        .then((queueObservationResponse: any) => {
+          console.log('OBSERVATION METRICS', queueObservationResponse);
+          const { results = [] } = queueObservationResponse;
+          if (results.length > 0) {
+            results.forEach((result: any) => {
+              const queue = (tempQueues || [])
+                .find((queue: any) => queue.id === result.group?.queueId);
+              const activeUsersMetric = (result?.data || [])
+                .find((datum: any) => datum.metric === 'oActiveUsers');
+              if (queue) {
+                queue.activeUsers = activeUsersMetric?.stats?.count || 0;
+                const onQueueUsersMetric = (result?.data || [])
+                  .find((datum: any) => datum.metric === 'oOnQueueUsers')
+                queue.onQueueUsers = onQueueUsersMetric?.stats?.count || 0;
+              }
+            });
+            tempQueues && setQueues(tempQueues);
+          }
+        })
+        .catch((err: any) => {
+          console.error(err);
+        })
+    }
     
 
-    const handleQueueLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    async function handleQueueLogout(e: React.MouseEvent<HTMLButtonElement>) {
         const queueId = e.currentTarget.value;
         await logoutUsersFromQueue(queueId)
           .then((data: any) => {
@@ -118,7 +123,7 @@ export function Queues(props: IProps) {
           })
       }
 
-    const renderQueueCards = (queue: any, index: number) => {
+    function renderQueueCards(queue: any, index: number) {
         return (
           <div key={`queue-card-${index}`} className="queue__card">
               <div className="queue__card-left">
@@ -144,7 +149,7 @@ export function Queues(props: IProps) {
               </div>
             </div>
         );
-      };
+    }
 
     return (
         <div className="queue">

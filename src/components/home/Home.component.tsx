@@ -3,6 +3,7 @@ import './Home.component.scss';
 import { 
   getUserRoutingStatus, 
 } from '../../utils/genesysCloudUtils';
+import notificationsController from '../../utils/notificationsController';
 import defaultAvatar from '../../assets/default.svg' ;
 
 interface IProps {
@@ -18,15 +19,16 @@ interface IRoutingStatus {
 }
 
 export function Home(props: IProps) {
-  const [routingStatus, setRoutingStatus] = useState<string>('');
-
   const { 
     avatarUrl, 
     name, 
-    systemPresence, 
+    systemPresence: initSystemPresence, 
     userEmail,
     userId, 
   } = props;
+
+  const [routingStatus, setRoutingStatus] = useState<string>('');
+  const [systemPresence, setSystemPresence] = useState<string>(initSystemPresence)
 
   const firstName = name.split(' ')[0] || name;
 
@@ -53,8 +55,38 @@ export function Home(props: IProps) {
   };
 
   useEffect(() => {
-    userId && getPlatformClientData();
-  }, []);
+    if (userId) {
+      getPlatformClientData();
+      setupSubscriptions();
+    }
+  }, [userId]);
+
+  async function setupSubscriptions() {
+    const presenceTopic = `v2.users.${userId}.presence`;
+    const routingStatusTopic = `v2.users.${userId}.routingStatus`;
+
+    const presenceCallback = (data: any) => {
+      const presence = data.eventBody?.presenceDefinition?.systemPresence;
+      if (presence) {
+        setSystemPresence(presence.toUpperCase().charAt(0) + presence.toLowerCase().slice(1));
+      }
+    };
+
+    const routingStatusCallback = (data: any) => {
+      const status = data.eventBody?.routingStatus?.status;
+      if (status) {
+        setRoutingStatus(status);
+      }
+    };
+
+    await notificationsController.createChannel()
+      .then(() => {
+        notificationsController.addSubscription(presenceTopic, presenceCallback);
+      })
+      .then(() => {
+        notificationsController.addSubscription(routingStatusTopic, routingStatusCallback);
+      })
+  }
 
   const getPlatformClientData = async() => {
     await getUserRoutingStatus(userId)
@@ -86,9 +118,9 @@ export function Home(props: IProps) {
             <div>
               It contains examples for:
                 <ul>
-                  <li>Displaying a user's own system info</li>
+                  <li>Displaying a user's own live system info</li>
                   <li>User lookup by email and name</li>
-                  <li>Displaying a user's queue information</li>
+                  <li>Displaying a user's real-time queue information</li>
                 </ul>
             </div>
           </div>
