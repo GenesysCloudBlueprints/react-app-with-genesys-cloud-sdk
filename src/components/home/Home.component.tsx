@@ -59,13 +59,16 @@ export function Home(props: IProps) {
           presenceColor = 'grey';
           break;
       case 'available':
-          presenceColor = 'green';
+          presenceColor = '#7D2';
           break;
       case 'busy' || 'meeting':
           presenceColor = 'red';
           break;
       case 'away' || 'break' || 'meal' || 'training':
-          presenceColor = 'yellow';
+          presenceColor = '#FB3';
+          break;
+      case 'on queue':
+          presenceColor = '#52cef8';
           break;
       default: 
           presenceColor = 'black';
