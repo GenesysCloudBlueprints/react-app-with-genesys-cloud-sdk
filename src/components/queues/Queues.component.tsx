@@ -88,7 +88,6 @@ export function Queues(props: IProps) {
   
     async function queueObservationWrapper() {
       const tempQueues = queueRef.current;
-      console.log('QUEUEUEUEUES', tempQueues);
       await getQueueObservations(queueRef.current)
         .then((queueObservationResponse: any) => {
           console.log('OBSERVATION METRICS', queueObservationResponse);
