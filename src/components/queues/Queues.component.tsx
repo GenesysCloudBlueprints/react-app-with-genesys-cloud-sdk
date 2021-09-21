@@ -89,7 +89,7 @@ export function Queues(props: IProps) {
     async function queueObservationWrapper() {
       const tempQueues = queueRef.current;
       await getQueueObservations(queueRef.current)
-        .then((queueObservationResponse: any) => {
+        .then((queueObservationResponse: IQueueObservationResponse) => {
           console.log('OBSERVATION METRICS', queueObservationResponse);
           const { results = [] } = queueObservationResponse;
           if (results.length > 0) {

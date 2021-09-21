@@ -18,6 +18,27 @@ interface IRoutingStatus {
   status: string
 }
 
+interface IPresenceResponse {
+  eventBody: IPresenceBody,
+}
+
+interface IPresenceBody {
+  presenceDefinition: IPresenceDefinition
+}
+
+interface IPresenceDefinition {
+  systemPresence: string
+}
+
+interface IRoutingResponse {
+  eventBody: IRoutingBody,
+}
+
+interface IRoutingBody {
+  routingStatus: IRoutingStatus
+}
+
+
 export function Home(props: IProps) {
   const { 
     avatarUrl, 
@@ -65,14 +86,16 @@ export function Home(props: IProps) {
     const presenceTopic = `v2.users.${userId}.presence`;
     const routingStatusTopic = `v2.users.${userId}.routingStatus`;
 
-    const presenceCallback = (data: any) => {
+    const presenceCallback = (data: IPresenceResponse) => {
+      console.log('PRESENCE NOTIFICATION', data);
       const presence = data.eventBody?.presenceDefinition?.systemPresence;
       if (presence) {
         setSystemPresence(presence.toUpperCase().charAt(0) + presence.toLowerCase().slice(1));
       }
     };
 
-    const routingStatusCallback = (data: any) => {
+    const routingStatusCallback = (data: IRoutingResponse) => {
+      console.log('ROUTING NOTIFICATION', data);
       const status = data.eventBody?.routingStatus?.status;
       if (status) {
         setRoutingStatus(status);
@@ -88,10 +111,9 @@ export function Home(props: IProps) {
       })
   }
 
-  const getPlatformClientData = async() => {
+  async function getPlatformClientData() {
     await getUserRoutingStatus(userId)
       .then((routingStatusResponse: IRoutingStatus) => {
-
         console.log('ROUTING STATUS', routingStatusResponse);
         setRoutingStatus(routingStatusResponse.status);
       })

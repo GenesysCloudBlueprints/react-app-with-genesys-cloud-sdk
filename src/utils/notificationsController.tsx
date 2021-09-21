@@ -1,6 +1,21 @@
 /**
  * This file manages the channel that listens to conversation events.
  */
+
+interface IChannelResponse {
+    connectUri: string,
+    expires: string,
+    id: string
+}
+
+interface IEntity {
+    id: string
+}
+
+interface ISubscriptionResponse {
+    entities: IEntity[]
+}
+
 const platformClient = require('purecloud-platform-client-v2/dist/node/purecloud-platform-client-v2.js');
 const notificationsApi = new platformClient.NotificationsApi();
  
@@ -33,10 +48,8 @@ export default {
      */
     createChannel(){
        return notificationsApi.postNotificationsChannels()
-       .then((data: any) => {
+       .then((data: IChannelResponse) => {
             console.log('---- Created Notifications Channel ----');
-            console.log('CHANNEL DATA', data);
-
             channel = data;
             ws = new WebSocket(channel.connectUri);
             ws.onmessage = onSocketMessage;
@@ -48,11 +61,11 @@ export default {
      * @param {String} topic Genesys Cloud notification topic string
      * @param {Function} callback callback function to fire when the event occurs
      */
-    addSubscription(topic: any, callback: any){
+    addSubscription(topic: string, callback: any){
         const body = [{'id': topic}];
 
         return notificationsApi.postNotificationsChannelSubscriptions(channel.id, body)
-           .then((data: any) => {
+           .then((data: ISubscriptionResponse) => {
                subscriptionMap[topic] = callback;
                console.log(`Added subscription to ${topic}`);
            });
