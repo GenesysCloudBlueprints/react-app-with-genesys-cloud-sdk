@@ -124,21 +124,35 @@ export async function getUserMe(skipCache: boolean = false) {
     }
 }
 
-export async function getUserDetails(id: string, skipCache: boolean = false) {
+export function getUserDetails(id: string, skipCache: boolean = false) {
     if (skipCache) {
-        return usersApi.getUser(id, { 
-            expand: ['routingStatus', 'presence'],
-        });
+        let tempDetails: any = {};
+        return usersApi.getUser(id)
+            .then((userDetailsData: any) => {
+                tempDetails = userDetailsData;
+                return presenceApi.getUserPresence(id, 'purecloud')
+            })
+            .then((userPresenceData: any) => {
+                tempDetails['presence'] = userPresenceData;
+                return tempDetails;
+            })
+            .catch((err: any) => {
+                console.error(err);
+            });
     } else if (cache['userDetails']){
         return cache['userDetails'];
     } else {
-        try {
-            cache['userDetails'] = await usersApi.getUser(id, { 
-                expand: ['routingStatus', 'presence'],
+        return usersApi.getUser(id)
+            .then((userDetailsData: any) => {
+                cache['userDetails'] = userDetailsData || {};
+                return presenceApi.getUserPresence(id, 'purecloud')
+            })
+            .then((userPresenceData: any) => {
+                cache['userDetails']['presence'] = userPresenceData;
+                return cache['userDetails']
+            })
+            .catch((err: any) => {
+                console.error(err);
             });
-            return cache['userDetails'];
-        } catch (err) {
-            console.error(err)
-        }
     }
   }

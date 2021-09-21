@@ -57,7 +57,7 @@ function App() {
         return getUserMe();
       })
       .then((userDetailsResponse: IUserDetails) => {
-        console.log('USER DETAILS', userDetailsResponse);
+        console.log('USER ME RESPONSE', userDetailsResponse);
         const presence = userDetailsResponse.presence?.presenceDefinition?.systemPresence || '';
         const url = userDetailsResponse.images?.[userDetailsResponse.images?.length - 1]?.imageUri || '';
         const userEmail = userDetailsResponse.email || '';
