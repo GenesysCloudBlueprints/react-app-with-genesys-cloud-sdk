@@ -1,0 +1,53 @@
+.queue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: baseline;
+  padding-bottom: 1rem;
+
+  &__title {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    margin-top: 1rem;
+  }
+
+  &__property-title {
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  &__card {
+    width: 90%;
+    border: 1px solid black;
+    padding: .5rem;
+    margin: 1rem;
+    background-color: rgb(248, 241, 241);
+
+    &-left {
+        display: inline-block;
+        margin-top: .2rem;
+        padding: 0 2%;
+        vertical-align: top;
+        max-width: 30%;
+    }
+
+    &-right {
+        display: inline-block;
+        padding: 1rem 0 0 10%;
+        vertical-align: center;
+        max-width: 30%;
+    }
+
+    &-center {
+        display: inline-block;
+        vertical-align: center;
+        max-width: 35%;
+        padding: 0 5%;
+        
+        &>span {
+          margin: 0 3px;
+        }
+    }
+  }
+}

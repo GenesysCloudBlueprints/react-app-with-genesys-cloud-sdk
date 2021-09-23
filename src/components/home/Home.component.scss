@@ -1,0 +1,44 @@
+.home {
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: baseline;
+
+    &__header {
+        width: 100%;
+        display: inline-flex;
+        align-self: baseline;
+        justify-content: space-evenly;
+        align-items: center;
+        background-color: rgba(247, 190, 152, 0.521);
+
+        &>h3{
+            padding-right: 4rem;
+        }
+    }
+
+    &__description {
+        margin: 1rem 4rem 0;
+
+        & ul {
+            margin-top: 1rem;
+        }
+
+        & p {
+            margin-top: 1rem;
+        }
+    }
+
+    &__footer {
+        width: 85%;
+        margin-left: 4rem;
+        display: block;
+        border-top: solid 1px rgb(193, 201, 209);
+        padding: 1rem 0;
+
+        & ul {
+            list-style-type: none;
+        }
+    }
+}
