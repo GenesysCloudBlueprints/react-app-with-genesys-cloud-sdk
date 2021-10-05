@@ -1,4 +1,4 @@
- ---
+---
 title: Develop a React App with Typescript that uses the Genesys Cloud Platform SDK
 author: jacob.shaw
 indextype: blueprint
@@ -65,7 +65,7 @@ git clone https://github.com/GenesysCloudBlueprints/react-app-with-genesys-cloud
 ### Create an Implicit Grant OAuth
 
 1. Login to your Genesys Cloud organization and create a new OAuth Credential (Implicit Grant). [Create an OAuth Client](https://help.mypurecloud.com/articles/create-an-oauth-client/)
-2. Add **http://localhost/** to the **Authorized redirect URIs**. Note: If you've changed the **redirecUri** value in the config file, then you need to add that new URI instead.
+2. Add **http://localhost:3000** to the **Authorized redirect URIs**. Note: If you've changed the **redirecUri** value in the config file, then you need to add that new URI instead.
 3. Add the following in the Scopes section:
     * analytics
     * authorization
@@ -98,7 +98,7 @@ export const clientConfig = {
 Open a terminal and set the working directory to the root directory of the project, then run the following:
 
 ```bash
-npm run install
+npm install
 npm run start
 ```
 
