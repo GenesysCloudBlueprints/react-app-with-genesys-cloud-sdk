@@ -31,8 +31,6 @@ This Genesys Cloud Developer Blueprint demonstrates how to integrate the Genesys
 
 * **Platform API Client SDK - Javascript** - Client libraries used to simplify application integration with Genesys Cloud by handling low-level HTTP requests. In this solution, the SDK authorizes the user and performs the API calls required to execute the administrator features.
 
-***Question*** Please verify that second sentence
-
 ## Prerequisites
 
 ### Specialized knowledge
@@ -49,60 +47,59 @@ A recommended Genesys Cloud role for the solutions engineer is Master Admin. For
 
 ## Sample React app
 
-Key features of the sample React app are:
+This solution includes a sample React app that uses the Genesys Cloud Javascript Platform SDK to display and update data for Genesys Cloud users.
 
-* **User Home Page** - Displays meaningful information about the present user
-* **User Search** - Allows a user to dynamically search for other Genesys Cloud users by name or email.
-* **User Queues** - Displays information for the queues the user belongs to and provides an admin option to log out all users from the queue.
+***QUESTION: Could we get a screen shot of the main page of the app***
 
-### Genesys Cloud Utils
+From the sample React app, you can update some user data, and that updated data is returned to Genesys Cloud in real-time. Specifically:
+
+* The **User** page displays data from your Genesys Cloud user account, including your profile image and user presence.
+* The **User Search** page allows you to search for other users in your Genesys Cloud org by name or email. The results appear as cards that act as miniature profile pages for the found users.
+* The **Queues List** page allows you to see Observation Query details for each queue. Within the React app, you can log out all of the agents on a particular queue, which is helpful if those agents cannot log out of their stations after their shift is over.
 
 The `genesysCloudUtils` file contains the intermediate functions that in turn call Genesys Cloud SDK methods. These functions return promises that are handled upon resolution in the file and in the invoking components themselves.
 
-### User Home Page
+## Run the sample React app locally
 
-The home page serves as a profile page for the logged in user.  It formats meaningful information about the user into sections on the page.  Profile image, name, and user presence are at the top, and more detailed information about the user is found at the bottom.
-
-### User Search
-
-This search page allows the user to search listings of other users by name or email.  The results are cards that act as miniature profile pages for the found users.
-
-### User Queues
-
-The queue page contains listings for all the queues the logged in user belongs to.  The queue name is displayed along with some statistics about the queue. An example of admin functionality is also found here in the form of a button that logs out all the members of a queue.
-
-### Run the sample React app
-
-### Create an Implicit Grant OAuth in Genesys Cloud
-
-1. Log in to your Genesys Cloud organization and create a new OAuth Credential (Implicit Grant). [Create an OAuth Client](https://help.mypurecloud.com/articles/create-an-oauth-client/)
-2. Add **http://localhost:3000** to the **Authorized redirect URIs**. Note: If you've changed the **redirecUri** value in the config file, then you need to add that new URI instead.
-3. Add the following in the Scopes section:
-    * analytics
-    * authorization
-    * presence
-    * routing
-    * users
-4. Save the Client ID for use in the configuration of the project.
-
-### Download the repository containing the project files
-Go to the [React App With Genesys Cloud SDK](https://github.com/GenesysCloudBlueprints/react-app-with-genesys-cloud-sdk) repository and clone it to your machine.
+### Download the repository that contains the project files
+1. Clone the [blueprint repo](https://github.com/GenesysCloudBlueprints/react-app-with-genesys-cloud-sdk) to your local machine.
 
 ```bash
 git clone https://github.com/GenesysCloudBlueprints/react-app-with-genesys-cloud-sdk.git
 ```
+### Create an Implicit Grant OAuth client in Genesys Cloud
 
-## Implementation steps
+1. Create an OAuth client with the following settings:
+  * **Grant type**: Implicit Grant (Browser)
+  * **Authorized redirect URIs**:
+    http://localhost:3000
+    :::primary
+    **Note***: If you've changed the **redirectUri** value in the src > clientConfig.js file, then add the new URI instead.
+    :::
+    * **Scopes**
+      * analytics
+      * authorization
+      * presence
+      * routing
+      * users
+2. Note the client ID. You will use this later to configure your project.  
 
-## Create a Client Credentials OAuth Grant in Genesys Cloud
+For more information, see [Create an OAuth Client](https://help.mypurecloud.com/?p=188023 "Goes to the Create an OAuth client article") in the Genesys Cloud Resource Center.
 
-1. Log in to your Genesys Cloud organization and create a new OAuth Credential (Client Credentials Grant). [Create an OAuth Client](https://help.mypurecloud.com/articles/create-an-oauth-client/)
-2. Select all of the admin **roles** for the OAuth client.
-3. Take note of the Client ID and Client Secret.
+### Create a Client Credentials Grant OAuth client in Genesys Cloud
+
+***QUESTION: Why do they need two OAuth clients? -- Let's explain the purpose of each***
+
+1. Create an OAuth client with the following settings:
+  * **Grant type**: Client Credentials Grant
+  * **Roles**: All of the available admin roles  
+2. Note the client ID and client secret. You will use these later to configure your project.  
+
+For more information, see [Create an OAuth Client](https://help.mypurecloud.com/?p=188023 "Goes to the Create an OAuth client article") in the Genesys Cloud Resource Center.
 
 ### Update the configuration file
 
-Modify the values in the configuration file before running the app. Use the values from the OAuth Client your created in the last step as follows:
+Modify the values in the configuration file before running the app. Use the values from your [Client Credentials Grant OAuth client](create-a-client-credentials-grant-oauth-client-in-genesys-cloud "Goes to the Create a Client Credentials Grant OAuth client in Genesys Cloud section"):
 
 clientConfig.js:
 
@@ -115,16 +112,15 @@ export const clientConfig = {
 
 ### Run the app
 
-Open a terminal and set the working directory to the root directory of the project, then run the following:
+Open a terminal window and set the working directory to the root directory of the project. Then run the following:
 
 ```bash
 npm install
 npm run start
 ```
+## Implementation steps
 
-## Configure the React project to use the Genesys Cloud SDK
-
-Now we'll look at the steps needed to integrate the Genesys Cloud SDK into your own React app.
+To integrate the Genesys Cloud SDK into your own React app, complete the following steps.
 
 ### Create a React project
 
@@ -135,27 +131,25 @@ npm install -g npx
 npx create-react-app name-of-your-app --template typescript
 ```
 
-If you're configuring an existing React app, it is suggested that you use a version greater than v16.0, since the sample app uses React hooks introduced in React v16.0.
-See the tsconfig.json file in the root directory of this project for a typescript configuration example.
+If you're configuring an existing React app, we recommend that you use version 16.0 or later, since the sample app uses React hooks, which were introduced in React version 16.0.
+See the tsconfig.json file in the root directory of this project for a TypeScript configuration example.
 
 ### Install NPM packages
 
-1. Install the Genesys Cloud Platform Client:
+1. Install the Genesys Cloud platform client:
 
     ```bash
     npm install purecloud-platform-client-v2
     ```
 
-### Import the platform-client-sdk to your project
+### Import the Genesys Cloud Platform API Client SDK - JavaScript to your project
 
-Use the following to import the platform-client-sdk:
+Use the following to import the Genesys Cloud Platform API Client SDK - JavaScript:
 
 ```javascript
 const platformClient = require('purecloud-platform-client-v2/dist/node/purecloud-platform-client-v2.js');
 ```
-You can now use the various API tools contained in the platformClient object.
-
-Example:
+You can now use the various API tools that are contained in the platformClient object:
 
 ```javascript
 const platformClient = require('purecloud-platform-client-v2/dist/node/purecloud-platform-client-v2.js');
@@ -170,5 +164,5 @@ const presenceApi = new platformClient.PresenceApi();
 ## Additional resources
 
 * [Genesys Cloud Platform SDK - Javascript](/api/rest/client-libraries/javascript/ "Goes to the Platform API Client SDK - JavaScript page") in the Genesys Cloud Developer Center
-* [Create a New React App](https://reactjs.org/docs/create-a-new-react-app.html)
-* [Github Repository](https://github.com/GenesysCloudBlueprints/react-app-with-genesys-cloud-sdk)
+* [Create a New React App](https://reactjs.org/docs/create-a-new-react-app.html "Goes to the Create a New React App page") in the React documentation
+* [react-app-with-genesys-cloud-sdk repository](https://github.com/GenesysCloudBlueprints/react-app-with-genesys-cloud-sdk) in Github
