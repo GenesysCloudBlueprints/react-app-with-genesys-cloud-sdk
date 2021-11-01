@@ -2,7 +2,7 @@
 
 > View the full [Develop a React app that uses the Genesys Cloud Platform SDK](https://developer.mypurecloud.com/blueprints/) article on the Genesys Cloud Developer Center.
 
-![React App flowchart](images/flowchart.png "React app flowchart")
+![React App flowchart](blueprint/images/flowchart.png "React app flowchart")
 
 ## Description
 
