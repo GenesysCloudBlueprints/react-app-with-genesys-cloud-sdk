@@ -55,7 +55,8 @@ export function UserSearch() {
                         systemPresence: ''
                     };
                     return userResult;
-                });
+                })
+                .slice(0, 5);
                 tempUsers = userResults || [];
                 return Promise.all(userResults.map((userResult: any) => getUserDetails(userResult.id, true)));
             })
