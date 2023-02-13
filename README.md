@@ -5,8 +5,8 @@
 ![React App flowchart](blueprint/images/flowchart.png "React app flowchart")
 
 :::primary
- **Note**: This blueprint uses React v16. Higher versions will require additional webpack configuration.
- :::
+**Note**: This blueprint uses React v16. Higher versions will require additional webpack configuration.
+:::
 
 ## Description
 
