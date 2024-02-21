@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { getUserByEmail, getUserDetails } from '../../utils/genesysCloudUtils';
-import defaultAvatar from '../../assets/default.svg';
+import { Models } from 'purecloud-platform-client-v2';
+import defaultAvatar from '../../assets/default.svg?url';
 import './UserSearch.component.scss'
-const debounce = require('lodash.debounce');
+import debounce from 'debounce';
 
 interface IUser {
     id: string,
@@ -12,9 +13,6 @@ interface IUser {
     systemPresence?: string
 }
 
-interface IUserResponse {
-    results: IUser[] 
-}
 
 interface IUserDetails {
     id: string,
@@ -45,7 +43,7 @@ export function UserSearch() {
         setSearchString(e.target.value);
         let tempUsers: any[];
         await getUserByEmail(e.target.value)
-            .then((userResponse: IUserResponse) => {
+            .then((userResponse: Models.UsersSearchResponse) => {
                 const userResults = (userResponse.results || []).map((result: any) => {
                     const userResult: IUser = {
                         id: result.id || '',
