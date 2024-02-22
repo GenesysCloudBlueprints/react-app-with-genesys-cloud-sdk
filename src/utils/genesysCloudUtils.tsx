@@ -1,11 +1,18 @@
 import { clientConfig } from '../clientConfig';
-const platformClient = require('purecloud-platform-client-v2/dist/node/purecloud-platform-client-v2.js');
+import platformClient from 'purecloud-platform-client-v2';
 
 interface IQueue {
     id: string,
     activeUsers: number,
     onQueueUsers: number
 }
+
+/* 
+ * This presence ID is hardcoded because System presence IDs are hardcoded into Genesys Cloud, can never change, and are not unique to orgs or regions
+ * In constrast, Org presences are not hardcoded.
+*/
+const client = platformClient.ApiClient.instance;
+const { clientId, redirectUri } = clientConfig;
 
 const searchApi = new platformClient.SearchApi();
 const usersApi = new platformClient.UsersApi();
@@ -14,14 +21,6 @@ const tokensApi = new platformClient.TokensApi();
 const routingApi = new platformClient.RoutingApi();
 const presenceApi = new platformClient.PresenceApi();
 
-/* 
- * This presence ID is hardcoded because System presence IDs are hardcoded into Genesys Cloud, can never change, and are not unique to orgs or regions
- * In constrast, Org presences are not hardcoded.
-*/
-const offlinePresenceId = 'ccf3c10a-aa2c-4845-8e8d-f59fa48c58e5';
-
-const client = platformClient.ApiClient.instance;
-const { clientId, redirectUri } = clientConfig;
 
 const cache: any = {};
 
@@ -71,7 +70,7 @@ export function logoutUser(userId: string) {
     return Promise.all([
         tokensApi.deleteToken(userId),
         presenceApi.patchUserPresence(userId, 'PURECLOUD', {
-            presenceDefinition: { id: offlinePresenceId }
+            presenceDefinition: { id: clientConfig.offlinePresenceId }
         })
     ])
 }

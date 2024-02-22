@@ -4,35 +4,17 @@ import {
     getQueueObservations, 
     logoutUsersFromQueue 
 } from '../../utils/genesysCloudUtils';
-import notificationsController from '../../utils/notificationsController';
+import { Models } from 'purecloud-platform-client-v2';
 import './Queues.component.scss'
 
 interface IQueueResponse {
     entities: IQueue[]
 }
 
-interface IQueueObservationResponse {
-    results: IQueueObservation[]
-}
-
 interface IQueue {
     id: string,
     activeUsers: number,
     onQueueUsers: number
-}
-
-interface IQueueObservation {
-    data: IData[],
-    group: {
-        queueId: string
-    }
-}
-
-interface IData {
-    metric: string,
-    stats: {
-        count: number
-    }
 }
 
 interface IProps {
@@ -59,7 +41,7 @@ export function Queues(props: IProps) {
           tempQueues = queueResponse?.entities;
           return getQueueObservations(tempQueues)
         })
-        .then((queueObservationResponse: IQueueObservationResponse) => {
+        .then((queueObservationResponse: Models.QueueObservationQueryResponse) => {
           console.log('OBSERVATION METRICS', queueObservationResponse);
           const { results = [] } = queueObservationResponse;
           results.forEach((result: any) => {
@@ -89,7 +71,7 @@ export function Queues(props: IProps) {
     async function queueObservationWrapper() {
       const tempQueues = queueRef.current;
       await getQueueObservations(queueRef.current)
-        .then((queueObservationResponse: IQueueObservationResponse) => {
+        .then((queueObservationResponse: Models.QueueObservationQueryResponse) => {
           console.log('OBSERVATION METRICS', queueObservationResponse);
           const { results = [] } = queueObservationResponse;
           if (results.length > 0) {
@@ -117,7 +99,7 @@ export function Queues(props: IProps) {
     async function handleQueueLogout(e: React.MouseEvent<HTMLButtonElement>) {
         const queueId = e.currentTarget.value;
         await logoutUsersFromQueue(queueId)
-          .then((data: any) => {
+          .then((_: any) => {
             queueObservationWrapper();
           })
       }

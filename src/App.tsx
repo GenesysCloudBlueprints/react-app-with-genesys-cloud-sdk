@@ -1,18 +1,11 @@
-import { 
-  BrowserRouter,
-  Route,
-  Switch 
-} from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { Home } from './components/home/Home.component';
 import { NavBar } from './components/navbar/NavBar.component';
 import { Queues } from './components/queues/Queues.component';
 import { UserSearch } from './components/user-search/UserSearch.component';
-import { 
-  authenticate,
-  getUserByEmail, 
-  getUserMe
-} from './utils/genesysCloudUtils';
+import { authenticate, getUserByEmail, getUserMe } from './utils/genesysCloudUtils';
+import { Models } from 'purecloud-platform-client-v2';
 import './App.scss';
 
 interface IUserDetails {
@@ -25,18 +18,10 @@ interface IUserDetails {
   }
 }
 
-interface IUser {
-  results: IResult[]
-}
-
 interface IImage {
   imageUri: string
 }
 
-interface IResult {
-  id: string,
-  name: string
-}
 
 function App() {
   const [avatarUrl, setAvatarUrl] = useState<string>('');
@@ -66,11 +51,11 @@ function App() {
         presence && setSystemPresence(presence);
         return getUserByEmail(userEmail);
       })
-      .then((userResponse: IUser) => {
+      .then((userResponse: Models.UsersSearchResponse) => {
         console.log('USER', userResponse);
-        const name: string = userResponse.results[0]?.name;
+        const name: string | undefined = userResponse.results[0]?.name;
         name && setName(name);
-        const userId: string = userResponse.results[0]?.id;
+        const userId: string | undefined = userResponse.results[0]?.id;
         userId && setUserId(userId);
         setInitialized(true)
       })
@@ -83,17 +68,20 @@ function App() {
     <BrowserRouter>
         <NavBar/>
         <div className="content-wrapper">
-          <Switch>
-            <Route exact path='/'>
-              { initialized && <Home avatarUrl={avatarUrl} name={name} systemPresence={systemPresence} userEmail={userEmail} userId={userId} /> }
-            </Route>
-            <Route path='/queues'>
-              { initialized && <Queues userId={userId}/> }
-            </Route>
-            <Route path='/user-search'>
-              { initialized && <UserSearch/> }
-            </Route>
-          </Switch>
+          <Routes>
+            <Route path='/' element={ 
+              initialized && 
+              <Home 
+                avatarUrl={avatarUrl} 
+                name={name} 
+                systemPresence={systemPresence} 
+                userEmail={userEmail} 
+                userId={userId} /> 
+            } />
+            <Route path='/queues' element={ initialized && <Queues userId={userId}/> } />
+
+            <Route path='/user-search' element={ initialized && <UserSearch/> } />
+          </Routes>
         </div>
     </BrowserRouter>
   );

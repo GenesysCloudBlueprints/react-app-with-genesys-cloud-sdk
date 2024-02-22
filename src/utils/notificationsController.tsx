@@ -2,22 +2,9 @@
  * This file manages the channel that listens to conversation events.
  */
 
-interface IChannelResponse {
-    connectUri: string,
-    expires: string,
-    id: string
-}
-
-interface IEntity {
-    id: string
-}
-
-interface ISubscriptionResponse {
-    entities: IEntity[]
-}
-
-const platformClient = require('purecloud-platform-client-v2/dist/node/purecloud-platform-client-v2.js');
+import platformClient from 'purecloud-platform-client-v2';
 const notificationsApi = new platformClient.NotificationsApi();
+
  
 let channel: any = {};
 let ws = null;
@@ -48,7 +35,7 @@ export default {
      */
     createChannel(){
        return notificationsApi.postNotificationsChannels()
-       .then((data: IChannelResponse) => {
+       .then((data: platformClient.Models.Channel) => {
             console.log('---- Created Notifications Channel ----');
             channel = data;
             ws = new WebSocket(channel.connectUri);
@@ -65,7 +52,7 @@ export default {
         const body = [{'id': topic}];
 
         return notificationsApi.postNotificationsChannelSubscriptions(channel.id, body)
-           .then((data: ISubscriptionResponse) => {
+           .then((_: platformClient.Models.ChannelTopicEntityListing) => {
                subscriptionMap[topic] = callback;
                console.log(`Added subscription to ${topic}`);
            });

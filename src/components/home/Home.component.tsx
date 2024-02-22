@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Home.component.scss';
 import { 
   getUserRoutingStatus, 
 } from '../../utils/genesysCloudUtils';
 import notificationsController from '../../utils/notificationsController';
 import defaultAvatar from '../../assets/default.svg' ;
+import { Models } from 'purecloud-platform-client-v2';
 
 interface IProps {
   avatarUrl: string,
@@ -116,8 +117,11 @@ export function Home(props: IProps) {
 
   async function getPlatformClientData() {
     await getUserRoutingStatus(userId)
-      .then((routingStatusResponse: IRoutingStatus) => {
+      .then((routingStatusResponse: Models.RoutingStatus) => {
         console.log('ROUTING STATUS', routingStatusResponse);
+        if (!routingStatusResponse.status) {
+          throw new Error("no status");
+        }
         setRoutingStatus(routingStatusResponse.status);
       })
       .catch((err: any) => {

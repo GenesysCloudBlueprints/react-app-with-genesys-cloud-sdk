@@ -12,7 +12,7 @@ summary: |
 This Genesys Cloud Developer Blueprint demonstrates how to include the Genesys Cloud Javascript Platform SDK in a React app. This solution uses Typescript, although the implementation will be similar if you're using plain JavaScript. This solution includes a sample React app that explores use cases such as creating a profile page for a user and completing admin operations such as signing all the users out of a queue.
 
 :::primary
-**Note**: This blueprint uses React v16. Higher versions will require additional webpack configuration.
+**Note**: This blueprint uses React v18. Higher versions will require additional webpack configuration.
 :::
 
 ![React App flowchart](images/flowchart.png "React app flowchart")
@@ -104,8 +104,9 @@ Open a terminal window and set the working directory to the root directory of th
 
 ```bash
 npm install
-npm run start
+npm run dev
 ```
+
 ## Implementation steps
 
 To integrate the Genesys Cloud SDK into your own React app, complete the following steps.
@@ -115,11 +116,11 @@ To integrate the Genesys Cloud SDK into your own React app, complete the followi
 If you are creating a new app from scratch, run the following commands in a terminal in the directory of your choice:
 
 ```bash
-npm install -g npx
-npx create-react-app name-of-your-app --template typescript
+# npm 7+, extra double-dash is needed:
+npm create vite@latest name-of-app -- --template react-ts
 ```
 
-If you're configuring an existing React app, we recommend that you use version 16.0 or later, since the sample app uses React hooks, which were introduced in React version 16.0.
+If you're configuring an existing React app, we recommend that you use version 18.0 or later.
 See the tsconfig.json file in the root directory of this project for a TypeScript configuration example.
 
 ### Install NPM packages
@@ -135,12 +136,13 @@ npm install purecloud-platform-client-v2
 Use the following to import the Genesys Cloud Platform API Client SDK - JavaScript:
 
 ```javascript
-const platformClient = require('purecloud-platform-client-v2/dist/node/purecloud-platform-client-v2.js');
+import platformClient from 'purecloud-platform-client-v2';
   ```
+
 You can now use the various API tools that are contained in the platformClient object:
 
 ```javascript
-const platformClient = require('purecloud-platform-client-v2/dist/node/purecloud-platform-client-v2.js');
+import platformClient from 'purecloud-platform-client-v2';
 const searchApi = new platformClient.SearchApi();
 const usersApi = new platformClient.UsersApi();
 const analyticsApi = new platformClient.AnalyticsApi();
