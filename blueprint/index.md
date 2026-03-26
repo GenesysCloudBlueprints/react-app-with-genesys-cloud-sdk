@@ -72,29 +72,36 @@ The sample React app includes the `genesysCloudUtils` file, which contains the i
   ```bash
   git clone https://github.com/GenesysCloudBlueprints/react-app-with-genesys-cloud-sdk.git
   ```
-### Create an Implicit Grant OAuth client in Genesys Cloud
+### Create a Code Authorization OAuth client in Genesys Cloud
 
 1. Create an OAuth client with the following settings:
-  * **Grant type**: Implicit Grant (Browser)
-  * **Authorized redirect URIs**:`http://localhost:3000`. If you've changed the **redirectUri** value in the src > clientConfig.js file, then use your new URI.
+  * **Grant type**: Code Authorization
+  * **Authorized redirect URIs**:`http://localhost:5173`. If you've changed the **redirectUri** value in the src > clientConfig.tsx file, then use your new URI.
   * **Scopes**
     * analytics
     * authorization
+    * notifications
     * presence
     * routing
     * users
-2. Note the client ID. You will use this later to configure your project.  
+2. Note the client ID. You will use this later to configure your project.
+
+:::primary
+**Note**: This solution uses the PKCE (Proof Key for Code Exchange) flow via the SDK's `loginPKCEGrant` method. No client secret is needed on the browser side since PKCE secures the authorization code exchange using a dynamically generated code verifier and challenge.
+:::
 
 For more information, see [Create an OAuth client](https://help.mypurecloud.com/?p=188023 "Goes to the Create an OAuth client article") in the Genesys Cloud Resource Center.
 
 ### Update the configuration file
 
-Modify the values in the clientConfig.js file before running the app. Use the values from your [OAuth client](#create-an-implicit-grant-oauth-client-in-genesys-cloud "Goes to the Create an Implicit Grant OAuth client in Genesys Cloud section"):
+Modify the values in the clientConfig.tsx file before running the app. Use the values from your [OAuth client](#create-a-code-authorization-oauth-client-in-genesys-cloud "Goes to the Create a Code Authorization OAuth client in Genesys Cloud section"):
 
 ```javascript
 export const clientConfig = {
-  GENESYS_CLOUD_CLIENT_ID: '<YOUR CLIENT ID HERE>',
-  REDIRECT_URI: '<YOUR PRODUCTION URI HERE>',
+  clientId: '<YOUR CLIENT ID HERE>',
+  redirectUri: '<YOUR REDIRECT URI HERE>',
+  environment: '<YOUR ENVIRONMENT HERE>', // e.g. 'mypurecloud.com', 'usw2.pure.cloud', 'mypurecloud.de'
+  offlinePresenceId: 'ccf3c10a-aa2c-4845-8e8d-f59fa48c58e5',
 };
 ```
 
