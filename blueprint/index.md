@@ -48,7 +48,7 @@ This Genesys Cloud Developer Blueprint demonstrates how to include the Genesys C
 
 This solution requires a Genesys Cloud license. For more information on licensing, see [Genesys Cloud Pricing](https://www.genesys.com/pricing "Opens the pricing article").
 
-A recommended Genesys Cloud role for the solutions engineer is Master Admin. For more information on Genesys Cloud roles and permissions, see the [Roles and permissions overview](https://help.mypurecloud.com/?p=24360 "Opens the Roles and permissions overview article").
+A recommended Genesys Cloud role for the solutions engineer is Master Admin. For more information on Genesys Cloud roles and permissions, see the [Roles and permissions overview](https://help.genesys.cloud/?p=24360 "Opens the Roles and permissions overview article").
 
 ## Sample React app
 
@@ -98,7 +98,7 @@ The sample React app includes the `genesysCloudUtils` file, which contains the i
 **Note**: In React development mode, `StrictMode` causes `useEffect` to fire twice. This can trigger a redirect loop with the PKCE flow because the authentication function gets called twice before the first call completes. This app uses a `useRef` guard to ensure the authentication only runs once. If you encounter a redirect loop during development, verify that this guard is in place.
 :::
 
-For more information, see [Create an OAuth client](https://help.mypurecloud.com/?p=188023 "Goes to the Create an OAuth client article") in the Genesys Cloud Resource Center.
+For more information, see [Create an OAuth client](https://help.genesys.cloud/?p=188023 "Goes to the Create an OAuth client article") in the Genesys Cloud Resource Center.
 
 ### Update the configuration file
 
