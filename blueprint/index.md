@@ -77,6 +77,10 @@ The sample React app includes the `genesysCloudUtils` file, which contains the i
 1. Create an OAuth client with the following settings:
   * **Grant type**: Code Authorization
   * **Authorized redirect URIs**:`http://localhost:5173`. If you've changed the **redirectUri** value in the src > clientConfig.tsx file, then use your new URI.
+
+:::warning
+**Important**: The redirect URI configured in your OAuth client must exactly match the **redirectUri** value in `clientConfig.tsx`. If they don't match, the app will redirect to the Genesys Cloud dashboard instead of returning to your app after login.
+:::
   * **Scopes**
     * analytics
     * authorization
@@ -88,6 +92,10 @@ The sample React app includes the `genesysCloudUtils` file, which contains the i
 
 :::primary
 **Note**: This solution uses the PKCE (Proof Key for Code Exchange) flow via the SDK's `loginPKCEGrant` method. No client secret is needed on the browser side since PKCE secures the authorization code exchange using a dynamically generated code verifier and challenge.
+:::
+
+:::primary
+**Note**: In React development mode, `StrictMode` causes `useEffect` to fire twice. This can trigger a redirect loop with the PKCE flow because the authentication function gets called twice before the first call completes. This app uses a `useRef` guard to ensure the authentication only runs once. If you encounter a redirect loop during development, verify that this guard is in place.
 :::
 
 For more information, see [Create an OAuth client](https://help.mypurecloud.com/?p=188023 "Goes to the Create an OAuth client article") in the Genesys Cloud Resource Center.

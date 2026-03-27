@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Home } from './components/home/Home.component';
 import { NavBar } from './components/navbar/NavBar.component';
 import { Queues } from './components/queues/Queues.component';
@@ -31,7 +31,10 @@ function App() {
   const [userEmail, setUserEmail] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
 
+  const authCalled = useRef(false);
   useEffect(() => {
+    if (authCalled.current) return;
+    authCalled.current = true;
     getPlatformClientData();
   }, []);
 
