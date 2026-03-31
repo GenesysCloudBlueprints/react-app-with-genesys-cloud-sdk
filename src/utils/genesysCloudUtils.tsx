@@ -12,7 +12,7 @@ interface IQueue {
  * In constrast, Org presences are not hardcoded.
 */
 const client = platformClient.ApiClient.instance;
-const { clientId, redirectUri } = clientConfig;
+const { clientId, redirectUri, environment } = clientConfig;
 
 const searchApi = new platformClient.SearchApi();
 const usersApi = new platformClient.UsersApi();
@@ -25,7 +25,8 @@ const presenceApi = new platformClient.PresenceApi();
 const cache: any = {};
 
 export function authenticate() {
-    return client.loginImplicitGrant(clientId, redirectUri, { state: 'state' })
+    client.setEnvironment(environment);
+    return client.loginPKCEGrant(clientId, redirectUri, { state: 'state' })
         .then((data: any) => {
             return data;
         })

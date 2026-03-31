@@ -48,7 +48,7 @@ This Genesys Cloud Developer Blueprint demonstrates how to include the Genesys C
 
 This solution requires a Genesys Cloud license. For more information on licensing, see [Genesys Cloud Pricing](https://www.genesys.com/pricing "Opens the pricing article").
 
-A recommended Genesys Cloud role for the solutions engineer is Master Admin. For more information on Genesys Cloud roles and permissions, see the [Roles and permissions overview](https://help.mypurecloud.com/?p=24360 "Opens the Roles and permissions overview article").
+A recommended Genesys Cloud role for the solutions engineer is Master Admin. For more information on Genesys Cloud roles and permissions, see the [Roles and permissions overview](https://help.genesys.cloud/?p=24360 "Opens the Roles and permissions overview article").
 
 ## Sample React app
 
@@ -72,29 +72,44 @@ The sample React app includes the `genesysCloudUtils` file, which contains the i
   ```bash
   git clone https://github.com/GenesysCloudBlueprints/react-app-with-genesys-cloud-sdk.git
   ```
-### Create an Implicit Grant OAuth client in Genesys Cloud
+### Create a Code Authorization OAuth client in Genesys Cloud
 
 1. Create an OAuth client with the following settings:
-  * **Grant type**: Implicit Grant (Browser)
-  * **Authorized redirect URIs**:`http://localhost:3000`. If you've changed the **redirectUri** value in the src > clientConfig.js file, then use your new URI.
+  * **Grant type**: Code Authorization
+  * **Authorized redirect URIs**:`http://localhost:5173`. If you've changed the **redirectUri** value in the src > clientConfig.tsx file, then use your new URI.
+
+:::warning
+**Important**: The redirect URI configured in your OAuth client must exactly match the **redirectUri** value in `clientConfig.tsx`. If they don't match, the app will redirect to the Genesys Cloud dashboard instead of returning to your app after login.
+:::
   * **Scopes**
     * analytics
     * authorization
+    * notifications
     * presence
     * routing
     * users
-2. Note the client ID. You will use this later to configure your project.  
+2. Note the client ID. You will use this later to configure your project.
 
-For more information, see [Create an OAuth client](https://help.mypurecloud.com/?p=188023 "Goes to the Create an OAuth client article") in the Genesys Cloud Resource Center.
+:::primary
+**Note**: This solution uses the PKCE (Proof Key for Code Exchange) flow via the SDK's `loginPKCEGrant` method. No client secret is needed on the browser side since PKCE secures the authorization code exchange using a dynamically generated code verifier and challenge.
+:::
+
+:::primary
+**Note**: In React development mode, `StrictMode` causes `useEffect` to fire twice. This can trigger a redirect loop with the PKCE flow because the authentication function gets called twice before the first call completes. This app uses a `useRef` guard to ensure the authentication only runs once. If you encounter a redirect loop during development, verify that this guard is in place.
+:::
+
+For more information, see [Create an OAuth client](https://help.genesys.cloud/?p=188023 "Goes to the Create an OAuth client article") in the Genesys Cloud Resource Center.
 
 ### Update the configuration file
 
-Modify the values in the clientConfig.js file before running the app. Use the values from your [OAuth client](#create-an-implicit-grant-oauth-client-in-genesys-cloud "Goes to the Create an Implicit Grant OAuth client in Genesys Cloud section"):
+Modify the values in the clientConfig.tsx file before running the app. Use the values from your [OAuth client](#create-a-code-authorization-oauth-client-in-genesys-cloud "Goes to the Create a Code Authorization OAuth client in Genesys Cloud section"):
 
 ```javascript
 export const clientConfig = {
-  GENESYS_CLOUD_CLIENT_ID: '<YOUR CLIENT ID HERE>',
-  REDIRECT_URI: '<YOUR PRODUCTION URI HERE>',
+  clientId: '<YOUR CLIENT ID HERE>',
+  redirectUri: '<YOUR REDIRECT URI HERE>',
+  environment: '<YOUR ENVIRONMENT HERE>', // e.g. 'mypurecloud.com', 'usw2.pure.cloud', 'mypurecloud.de'
+  offlinePresenceId: 'ccf3c10a-aa2c-4845-8e8d-f59fa48c58e5',
 };
 ```
 
